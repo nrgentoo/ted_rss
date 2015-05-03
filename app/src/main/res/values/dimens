@@ -1,0 +1,7 @@
+<resources>
+    <!-- basic margins -->
+    <dimen name="margin">8dp</dimen>
+    <dimen name="margin_2x">16dp</dimen>
+
+    <!-- Text dimensions -->
+</resources>
