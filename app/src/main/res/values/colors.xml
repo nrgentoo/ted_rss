@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Theme colors -->
+    <color name="primary">#e53935</color>
+    <color name="primary_dark">#b71c1c</color>
+    <color name="accent">#283593</color>
+    <color name="window_background">#ffffff</color>
+    <color name="navigation_bar">#e53935</color>
+    <color name="control_normal">#c5c5c5</color>
+    <color name="header_text_color">#ffffff</color>
 
+    <!-- text colors -->
+    <color name="text_white">#ffffff</color>
 </resources>

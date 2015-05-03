@@ -4,4 +4,5 @@
     <dimen name="margin_2x">16dp</dimen>
 
     <!-- Text dimensions -->
+    <dimen name="display">34sp</dimen>
 </resources>

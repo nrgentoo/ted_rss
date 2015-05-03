@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.TEDTalks" parent="BaseTheme">
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
+    </style>
+</resources>
