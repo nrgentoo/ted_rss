@@ -55,6 +55,7 @@ public class SplashActivity extends AppCompatActivity {
                         if (value != null && !value.isEmpty()) {
                             Toast.makeText(SplashActivity.this, "Ok",
                                     Toast.LENGTH_SHORT).show();
+                            Log.d("Load Rss", "talks size: " + value.size());
                             Log.d("Load Rss", "first item id: " + value.get(0).getTalkId());
                             Log.d("Load Rss", "first item: " + value.get(0).getTitle());
                             Log.d("Load Rss", "first item url: " + value.get(0).getFileUrl());

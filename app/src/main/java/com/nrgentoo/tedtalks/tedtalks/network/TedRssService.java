@@ -1,12 +1,17 @@
 package com.nrgentoo.tedtalks.tedtalks.network;
 
+import android.util.Log;
+
+import com.nrgentoo.tedtalks.tedtalks.database.HelperFactory;
 import com.nrgentoo.tedtalks.tedtalks.model.Talk;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -20,6 +25,8 @@ import rx.Observable;
 public enum TedRssService {
     INSTANCE;
 
+    private static final String TAG = TedRssService.class.getSimpleName();
+
     // --------------------------------------------------------------------------------------------
     //      FIELDS
     // --------------------------------------------------------------------------------------------
@@ -32,13 +39,24 @@ public enum TedRssService {
     // --------------------------------------------------------------------------------------------
 
     /**
-     * Get talks from rss feed
+     * Get talks from rss feed and cache them to database
      *
      * @return list of talks
      */
     public Observable<List<Talk>> getTalks() {
-        return getTedRss().getTalks()
-                .flatMap(rss -> Observable.just(rss.talks));
+        return getTalksFromRss()
+                .doOnNext(talks -> {
+                    try {
+                        for (Talk newTalk : talks) {
+                            // store talks in db
+                            HelperFactory.getHelper().getTalkDao().createOrUpdate(newTalk);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                })
+                .flatMap(talks1 -> getTalksFromDb());
     }
 
     // --------------------------------------------------------------------------------------------
@@ -70,5 +88,22 @@ public enum TedRssService {
         public List<Talk> talks = new ArrayList<>();
     }
 
+    // --------------------------------------------------------------------------------------------
+    //      PRIVATE METHODS
+    // --------------------------------------------------------------------------------------------
+    private Observable<List<Talk>> getTalksFromDb() {
+        return Observable.defer(() -> {
+            try {
+                return Observable.just(HelperFactory.getHelper().getTalkDao().getAllTalks());
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return Observable.just(Collections.EMPTY_LIST);
+            }
+        });
+    }
 
+    private Observable<List<Talk>> getTalksFromRss() {
+        return getTedRss().getTalks()
+                .flatMap(rss -> Observable.just(rss.talks));
+    }
 }
