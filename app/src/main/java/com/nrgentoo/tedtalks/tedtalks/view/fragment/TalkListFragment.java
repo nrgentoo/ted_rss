@@ -3,6 +3,7 @@ package com.nrgentoo.tedtalks.tedtalks.view.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -89,6 +90,11 @@ public class TalkListFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        // set actionbar
+        if (getActivity() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        }
+
         // set layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         rvTalks.setLayoutManager(mLayoutManager);
