@@ -8,12 +8,14 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
+
 /**
  * Talk object
  */
 @DatabaseTable(tableName = "talks")
 @Root(name = "item", strict = false)
-public class Talk {
+public class Talk implements Serializable {
 
     // --------------------------------------------------------------------------------------------
     //      FIELDS
@@ -64,6 +66,10 @@ public class Talk {
     @Path("thumbnail")
     @Attribute(name = "url")
     String thumbnail;
+
+    @DatabaseField
+    @Element
+    String duration;
 
     // --------------------------------------------------------------------------------------------
     //      CONSTRUCTOR
@@ -117,5 +123,9 @@ public class Talk {
 
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    public String getDuration() {
+        return duration;
     }
 }

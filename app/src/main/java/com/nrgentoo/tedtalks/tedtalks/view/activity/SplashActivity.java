@@ -10,6 +10,7 @@ import com.nrgentoo.tedtalks.tedtalks.R;
 import com.nrgentoo.tedtalks.tedtalks.model.Talk;
 import com.nrgentoo.tedtalks.tedtalks.network.TedRssService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -66,6 +67,9 @@ public class SplashActivity extends AppCompatActivity {
                             Log.d("Load Rss", "second item url: " + value.get(1).getFileUrl());
                             Log.d("Load Rss", "second item image: " + value.get(1).getImage());
                             Log.d("Load Rss", "second item thumbnail: " + value.get(1).getThumbnail());
+
+                            startActivity(TedTalksActivity.getCallingIntent(SplashActivity.this, (ArrayList<Talk>) value));
+                            finish();
                         }
                     }
 

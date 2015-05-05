@@ -40,4 +40,11 @@ dependencies {
     }
     // data persistence
     compile 'com.j256.ormlite:ormlite-android:4.48'
+    // icepick
+    compile 'frankiesardo:icepick:3.0.2'
+    provided 'frankiesardo:icepick-processor:3.0.2'
+    // material widgets
+    compile 'com.android.support:recyclerview-v7:22.1.1'
+    // picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
