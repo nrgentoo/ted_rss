@@ -56,6 +56,9 @@ public class Talk implements Serializable {
     @Element
     String pubDate;
 
+    @DatabaseField
+    long unixPubDate;
+
     String shortPubDate;
 
     @DatabaseField
@@ -81,6 +84,18 @@ public class Talk implements Serializable {
     // --------------------------------------------------------------------------------------------
     public Talk() {
         // do nothing
+    }
+
+    // --------------------------------------------------------------------------------------------
+    //      PUBLIC METHODS
+    // --------------------------------------------------------------------------------------------
+    public void initUnixPubDate() {
+        try {
+            Date date = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z").parse(pubDate);
+            unixPubDate = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -118,14 +133,13 @@ public class Talk implements Serializable {
         return pubDate;
     }
 
+    public long getUnixPubDate() {
+        return unixPubDate;
+    }
+
     public String getShortPubDate() {
         if (shortPubDate == null) {
-            try {
-                Date date = new SimpleDateFormat("E, d MMM yyyy").parse(pubDate);
-                shortPubDate = new SimpleDateFormat("E, d MMM yyy").format(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            shortPubDate = new SimpleDateFormat("E, d MMM yyy").format(new Date(unixPubDate));
         }
         return shortPubDate;
     }

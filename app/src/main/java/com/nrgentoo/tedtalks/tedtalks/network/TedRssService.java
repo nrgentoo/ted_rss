@@ -3,6 +3,7 @@ package com.nrgentoo.tedtalks.tedtalks.network;
 import android.util.Log;
 
 import com.nrgentoo.tedtalks.tedtalks.database.HelperFactory;
+import com.nrgentoo.tedtalks.tedtalks.database.TalkDao;
 import com.nrgentoo.tedtalks.tedtalks.model.Talk;
 
 import org.simpleframework.xml.ElementList;
@@ -12,6 +13,7 @@ import org.simpleframework.xml.Root;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -47,9 +49,15 @@ public enum TedRssService {
         return getTalksFromRss()
                 .doOnNext(talks -> {
                     try {
+                        TalkDao talkDao = HelperFactory.getHelper().getTalkDao();
                         for (Talk newTalk : talks) {
-                            // store talks in db
-                            HelperFactory.getHelper().getTalkDao().createOrUpdate(newTalk);
+                            // if id not found in the db, then...
+                            if (!talkDao.idExists((int) newTalk.getTalkId())) {
+                                // ...init unix pubDate time...
+                                newTalk.initUnixPubDate();
+                                // ...and store talk in db
+                                talkDao.create(newTalk);
+                            }
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -94,7 +102,9 @@ public enum TedRssService {
     private Observable<List<Talk>> getTalksFromDb() {
         return Observable.defer(() -> {
             try {
-                return Observable.just(HelperFactory.getHelper().getTalkDao().getAllTalks());
+                List<Talk> talks = HelperFactory.getHelper().getTalkDao().getAllTalks();
+                Collections.sort(talks, Collections.reverseOrder(new DateComparator()));
+                return Observable.just(talks);
             } catch (SQLException e) {
                 e.printStackTrace();
                 return Observable.just(Collections.EMPTY_LIST);
@@ -105,5 +115,15 @@ public enum TedRssService {
     private Observable<List<Talk>> getTalksFromRss() {
         return getTedRss().getTalks()
                 .flatMap(rss -> Observable.just(rss.talks));
+    }
+
+    private class DateComparator implements Comparator<Talk> {
+
+        @Override
+        public int compare(Talk lhs, Talk rhs) {
+            if (lhs.getUnixPubDate() > rhs.getUnixPubDate()) return 1;
+            if (lhs.getUnixPubDate() < rhs.getUnixPubDate()) return -1;
+            return 0;
+        }
     }
 }
