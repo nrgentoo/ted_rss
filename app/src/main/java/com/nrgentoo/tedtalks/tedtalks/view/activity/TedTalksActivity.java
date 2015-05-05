@@ -56,7 +56,6 @@ public class TedTalksActivity extends AppCompatActivity {
         }
 
         if (getSupportFragmentManager().findFragmentById(R.id.container) == null) {
-            Toast.makeText(this, "add fragment", Toast.LENGTH_SHORT).show();
             // add talk list fragment
             getSupportFragmentManager()
                     .beginTransaction()

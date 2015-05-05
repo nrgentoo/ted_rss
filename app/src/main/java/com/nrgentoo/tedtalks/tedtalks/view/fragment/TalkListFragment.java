@@ -98,6 +98,8 @@ public class TalkListFragment extends Fragment {
         rvTalks.setAdapter(adapter);
 
         // set divider
-        rvTalks.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        int margin = getResources().getDimensionPixelSize(R.dimen.margin_2x);
+        rvTalks.addItemDecoration(new DividerItemDecoration(getActivity(),
+                LinearLayoutManager.VERTICAL, margin, margin));
     }
 }
