@@ -9,6 +9,9 @@ import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Talk object
@@ -52,6 +55,8 @@ public class Talk implements Serializable {
     @DatabaseField
     @Element
     String pubDate;
+
+    String shortPubDate;
 
     @DatabaseField
     @Element
@@ -111,6 +116,18 @@ public class Talk implements Serializable {
 
     public String getPubDate() {
         return pubDate;
+    }
+
+    public String getShortPubDate() {
+        if (shortPubDate == null) {
+            try {
+                Date date = new SimpleDateFormat("E, d MMM yyyy").parse(pubDate);
+                shortPubDate = new SimpleDateFormat("E, d MMM yyy").format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return shortPubDate;
     }
 
     public String getCategory() {

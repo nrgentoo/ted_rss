@@ -50,7 +50,7 @@ public class TalksAdapter extends RecyclerView.Adapter<TalksAdapter.TalkHolder> 
         Talk talk = mTalks.get(position);
         holder.tvTitle.setText(talk.getTitle());
         holder.tvDuration.setText(talk.getDuration());
-        holder.tvPubDate.setText(talk.getPubDate());
+        holder.tvPubDate.setText(talk.getShortPubDate());
         Picasso.with(holder.itemView.getContext())
                 .load(talk.getThumbnail())
                 .fit()
