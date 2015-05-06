@@ -27,9 +27,9 @@ import icepick.Icicle;
  */
 public class TalkListFragment extends Fragment {
 
-    private static final String ARGUMENT_TALKS = TalkListFragment.class.getPackage() + "ARGUMENT_TALKS";
+    private static final String ARGUMENT_TALKS = TalkListFragment.class.getPackage() + ".ARGUMENT_TALKS";
 
-    public static Fragment newInstance(ArrayList<Talk> talks) {
+    public static TalkListFragment newInstance(ArrayList<Talk> talks) {
         Bundle args = new Bundle();
         args.putSerializable(ARGUMENT_TALKS, talks);
 
@@ -111,6 +111,7 @@ public class TalkListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         adapter.setClickListener((v, position) -> onItemClicked(v, position));
+        getActivity().setTitle(R.string.app_name);
     }
 
     @Override
@@ -126,7 +127,12 @@ public class TalkListFragment extends Fragment {
     private void onItemClicked(View view, int position) {
         Talk clickedTalk = adapter.getItem(position);
         if (clickedTalk != null) {
-            // TODO: show fragment with talk details
+            // show fragment with talk details
+            getFragmentManager().beginTransaction()
+                    .addToBackStack(null)
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .replace(R.id.container, TalkDetailsFragment.newInstance(clickedTalk))
+                    .commit();
         }
     }
 }

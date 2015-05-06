@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.nrgentoo.tedtalks.tedtalks.R;
 import com.nrgentoo.tedtalks.tedtalks.model.Talk;

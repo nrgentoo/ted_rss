@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/sv_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/action_bar_space"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
+
+            <FrameLayout
+                android:id="@+id/fl_image_container"
+                android:layout_width="match_parent"
+                android:layout_height="224dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/action_bar_space">
+
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:src="@color/accent" />
+
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_play_circle" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/fl_image_container"
+                android:layout_alignEnd="@+id/fl_image_container"
+                android:layout_alignRight="@+id/fl_image_container"
+                android:layout_marginBottom="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginRight="@dimen/margin_2x"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/body"
+                tools:text="00:14:12" />
+
+            <TextView
+                android:id="@+id/tv_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fl_image_container"
+                android:layout_marginLeft="@dimen/margin_2x"
+                android:layout_marginRight="@dimen/margin_2x"
+                android:layout_marginTop="@dimen/margin_2x"
+                android:textColor="@color/text_grey"
+                android:textSize="@dimen/body"
+                tools:text="Category: Higher Education" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tv_category"
+                android:layout_marginLeft="@dimen/margin_2x"
+                android:layout_marginRight="@dimen/margin_2x"
+                android:layout_marginTop="@dimen/margin_2x"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/title"
+                tools:text="Ameenah Gurib-Fakim: Humble plants that hide surprising secrets" />
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_title"
+                android:layout_marginLeft="@dimen/margin_2x"
+                android:layout_marginRight="@dimen/margin_2x"
+                android:layout_marginTop="@dimen/margin_2x"
+                android:layout_marginBottom="@dimen/margin"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/body"
+                tools:text="In this intriguing talk, biologist Ameenah Gurib-Fakim introduces us to rare plant species from isolated islands and regions of Africa. Meet the shape-shifting benjoin; the baume de l'ile plate, which might offer a new treatment for asthma; and the iconic baobab tree, which could hold the key to the future of food. Plus: monkey apples." />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/layout_toolbar" />
+
+</FrameLayout>
