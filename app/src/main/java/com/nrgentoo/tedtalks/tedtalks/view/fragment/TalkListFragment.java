@@ -57,8 +57,6 @@ public class TalkListFragment extends Fragment {
     @InjectView(R.id.rv_talks)
     RecyclerView rvTalks;
 
-    private RecyclerView.LayoutManager mLayoutManager;
-
     // --------------------------------------------------------------------------------------------
     //      LIFECYCLE
     // --------------------------------------------------------------------------------------------
@@ -96,7 +94,7 @@ public class TalkListFragment extends Fragment {
         }
 
         // set layout manager
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         rvTalks.setLayoutManager(mLayoutManager);
 
         // create adapter
@@ -107,5 +105,28 @@ public class TalkListFragment extends Fragment {
         int margin = getResources().getDimensionPixelSize(R.dimen.margin_2x);
         rvTalks.addItemDecoration(new DividerItemDecoration(getActivity(),
                 LinearLayoutManager.VERTICAL, margin, margin));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.setClickListener((v, position) -> onItemClicked(v, position));
+    }
+
+    @Override
+    public void onPause() {
+        adapter.setClickListener(null);
+        super.onPause();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    //      UI METHODS
+    // --------------------------------------------------------------------------------------------
+
+    private void onItemClicked(View view, int position) {
+        Talk clickedTalk = adapter.getItem(position);
+        if (clickedTalk != null) {
+            // TODO: show fragment with talk details
+        }
     }
 }
