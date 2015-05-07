@@ -1,22 +1,16 @@
 package com.nrgentoo.tedtalks.tedtalks.view.activity;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.IBinder;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.WindowManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.nrgentoo.tedtalks.tedtalks.R;
-import com.nrgentoo.tedtalks.tedtalks.Service.VideoPlaybackService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

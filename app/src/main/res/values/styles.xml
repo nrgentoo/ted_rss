@@ -7,5 +7,7 @@
 
     <style name="Toolbar" parent="BaseTheme">
         <item name="android:textColorPrimary">@color/header_text_color</item>
+        <item name="android:textColorSecondary">@color/header_text_color</item>
+        <item name="colorControlNormal">@color/header_text_color</item>
     </style>
 </resources>
