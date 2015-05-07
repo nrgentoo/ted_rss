@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.nrgentoo.tedtalks.tedtalks.R;
 import com.nrgentoo.tedtalks.tedtalks.model.Talk;
@@ -54,8 +53,8 @@ public class SplashActivity extends AppCompatActivity {
                     public void onNext(List<Talk> value) {
                         // TODO: finish activity and supply result to the TalkList Activity
                         if (value != null && !value.isEmpty()) {
-                            Toast.makeText(SplashActivity.this, "Ok",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(SplashActivity.this, "Ok",
+//                                    Toast.LENGTH_SHORT).show();
                             Log.d("Load Rss", "talks size: " + value.size());
                             Log.d("Load Rss", "first item id: " + value.get(0).getTalkId());
                             Log.d("Load Rss", "first item: " + value.get(0).getTitle());
