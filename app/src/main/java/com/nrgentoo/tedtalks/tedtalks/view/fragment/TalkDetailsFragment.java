@@ -14,10 +14,12 @@ import android.widget.TextView;
 
 import com.nrgentoo.tedtalks.tedtalks.R;
 import com.nrgentoo.tedtalks.tedtalks.model.Talk;
+import com.nrgentoo.tedtalks.tedtalks.view.activity.PlayerActivity;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import icepick.Icicle;
 
 /**
@@ -132,5 +134,15 @@ public class TalkDetailsFragment extends Fragment {
         }
 
         return false;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    //      UI METHODS
+    // --------------------------------------------------------------------------------------------
+
+    @OnClick(R.id.iv_play)
+    void onPlayClick() {
+        // show activity with media player
+        startActivity(PlayerActivity.getCallingIntent(getActivity(), mTalk.getFileUrl()));
     }
 }
