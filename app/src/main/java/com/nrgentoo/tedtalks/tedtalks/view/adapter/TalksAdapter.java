@@ -78,6 +78,11 @@ public class TalksAdapter extends RecyclerView.Adapter<TalksAdapter.TalkHolder> 
         else return null;
     }
 
+    public void addAll(List<Talk> talks) {
+        mTalks.addAll(0, talks);
+        notifyItemRangeInserted(0, talks.size());
+    }
+
     // --------------------------------------------------------------------------------------------
     //      VIEW HOLDER
     // --------------------------------------------------------------------------------------------

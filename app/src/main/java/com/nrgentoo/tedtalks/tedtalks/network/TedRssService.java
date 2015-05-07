@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -47,24 +48,15 @@ public enum TedRssService {
      */
     public Observable<List<Talk>> getTalks() {
         return getTalksFromRss()
-                .doOnNext(talks -> {
-                    try {
-                        TalkDao talkDao = HelperFactory.getHelper().getTalkDao();
-                        for (Talk newTalk : talks) {
-                            // if id not found in the db, then...
-                            if (!talkDao.idExists((int) newTalk.getTalkId())) {
-                                // ...init unix pubDate time...
-                                newTalk.initUnixPubDate();
-                                // ...and store talk in db
-                                talkDao.create(newTalk);
-                            }
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
-                })
                 .flatMap(talks1 -> getTalksFromDb());
+    }
+
+    public Observable<List<Talk>> getNewTalks() {
+        return getTalksFromRss()
+                .map(talkList -> {
+                    Collections.sort(talkList, Collections.reverseOrder(new DateComparator()));
+                    return talkList;
+                });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -114,7 +106,33 @@ public enum TedRssService {
 
     private Observable<List<Talk>> getTalksFromRss() {
         return getTedRss().getTalks()
-                .flatMap(rss -> Observable.just(rss.talks));
+                .flatMap(rss -> Observable.just(rss.talks))
+                .map(talkList -> {
+                    try {
+                        TalkDao talkDao = HelperFactory.getHelper().getTalkDao();
+
+                        int i = 0;
+                        Iterator<Talk> itr = talkList.iterator();
+                        while (itr.hasNext()) {
+                            Talk newTalk = itr.next();
+
+                            // if id not found in the db, then...
+                            if (!talkDao.idExists((int) newTalk.getTalkId())) {
+                                // ...init unix pubDate time...
+                                newTalk.initUnixPubDate();
+                                // ...and store talk in db
+                                talkDao.create(newTalk);
+                            } else {
+                                itr.remove();
+                            }
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+
+                    return talkList;
+                });
     }
 
     private class DateComparator implements Comparator<Talk> {

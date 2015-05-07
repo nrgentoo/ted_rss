@@ -3,6 +3,7 @@ package com.nrgentoo.tedtalks.tedtalks.view.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +14,21 @@ import android.view.ViewGroup;
 
 import com.nrgentoo.tedtalks.tedtalks.R;
 import com.nrgentoo.tedtalks.tedtalks.model.Talk;
+import com.nrgentoo.tedtalks.tedtalks.network.TedRssService;
 import com.nrgentoo.tedtalks.tedtalks.view.adapter.TalksAdapter;
 import com.nrgentoo.tedtalks.tedtalks.view.components.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import icepick.Icicle;
+import me.tatarka.rxloader.RxLoader;
+import me.tatarka.rxloader.RxLoaderManager;
+import me.tatarka.rxloader.RxLoaderManagerCompat;
+import me.tatarka.rxloader.RxLoaderObserver;
+import rx.Observable;
 
 /**
  * Talk list fragment
@@ -48,6 +56,8 @@ public class TalkListFragment extends Fragment {
 
     private TalksAdapter adapter;
 
+    private RxLoader<List<Talk>> talksLoader;
+
     // --------------------------------------------------------------------------------------------
     //      UI REFERENCES
     // --------------------------------------------------------------------------------------------
@@ -56,6 +66,8 @@ public class TalkListFragment extends Fragment {
     Toolbar toolbar;
     @InjectView(R.id.rv_talks)
     RecyclerView rvTalks;
+    @InjectView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // --------------------------------------------------------------------------------------------
     //      LIFECYCLE
@@ -81,8 +93,8 @@ public class TalkListFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         ButterKnife.reset(this);
     }
 
@@ -105,6 +117,9 @@ public class TalkListFragment extends Fragment {
         int margin = getResources().getDimensionPixelSize(R.dimen.margin_2x);
         rvTalks.addItemDecoration(new DividerItemDecoration(getActivity(),
                 LinearLayoutManager.VERTICAL, margin, margin));
+
+        // iit RxLoaders
+        initLoaders();
     }
 
     @Override
@@ -112,6 +127,7 @@ public class TalkListFragment extends Fragment {
         super.onResume();
         adapter.setClickListener((v, position) -> onItemClicked(v, position));
         getActivity().setTitle(R.string.app_name);
+        swipeRefreshLayout.setOnRefreshListener(() -> onListRefresh());
     }
 
     @Override
@@ -134,5 +150,37 @@ public class TalkListFragment extends Fragment {
                     .replace(R.id.container, TalkDetailsFragment.newInstance(clickedTalk))
                     .commit();
         }
+    }
+
+    private void onListRefresh() {
+        talksLoader.restart();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    //      PRIVATE METHODS
+    // --------------------------------------------------------------------------------------------
+
+    private void initLoaders() {
+        // init loaderManager
+        RxLoaderManager loaderManager = RxLoaderManagerCompat.get(this);
+
+        talksLoader = loaderManager.create(loadNewTalks(),
+                new RxLoaderObserver<List<Talk>>() {
+                    @Override
+                    public void onNext(List<Talk> value) {
+                        adapter.addAll(value);
+                        talksLoader.clear();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+    }
+
+    // --------------------------------------------------------------------------------------------
+    //      API REQUESTS
+    // --------------------------------------------------------------------------------------------
+
+    private Observable<List<Talk>> loadNewTalks() {
+        // load talks from rss feed
+        return TedRssService.INSTANCE.getNewTalks();
     }
 }
